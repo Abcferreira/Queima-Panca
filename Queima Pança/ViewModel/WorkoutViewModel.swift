@@ -207,5 +207,39 @@ final class WorkoutViewModel: ObservableObject {
         completedSets.removeAll()
         completedWorkouts.removeAll()
         persistence?.resetAllProgress()
+        updateWidgetData()
+    }
+
+    // MARK: - Widget Data Sync
+
+    func updateWidgetData() {
+        let todayWorkout = todayWorkout()
+        let data = SharedWorkoutData(
+            todayWorkoutDay: todayWorkout?.day ?? "Descanso",
+            todayMuscleGroups: todayWorkout?.subtitle ?? "Dia de descanso 😴",
+            todayExerciseCount: todayWorkout?.exercises.count ?? 0,
+            todayEstimatedMinutes: todayWorkout?.estimatedMinutes ?? 0,
+            todayProgress: todayWorkout.map { workoutProgress(for: $0) } ?? 0,
+            weeklyProgress: weeklyProgressPercent,
+            completedWorkouts: totalWorkoutsCompleted,
+            totalWorkouts: workouts.count,
+            lastUpdated: Date()
+        )
+        SharedDataService.save(data)
+        WidgetCenter.shared.reloadAllTimelines()
+    }
+
+    /// Get today's workout based on weekday
+    private func todayWorkout() -> DayWorkout? {
+        let weekday = Calendar.current.component(.weekday, from: Date())
+        let dayMap: [Int: String] = [
+            2: "Segunda-feira",
+            3: "Terça-feira",
+            4: "Quarta-feira",
+            5: "Quinta-feira",
+            6: "Sexta-feira"
+        ]
+        guard let dayName = dayMap[weekday] else { return nil }
+        return workouts.first { $0.day == dayName }
     }
 }

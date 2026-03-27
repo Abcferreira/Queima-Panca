@@ -8,6 +8,9 @@ struct SettingsView: View {
     @State private var reminderHour = 7
     @State private var reminderMinute = 0
     @State private var showResetAlert = false
+    @State private var healthKitEnabled = false
+    @State private var todaySteps: Double = 0
+    @State private var todayCalories: Double = 0
 
     private let hours = Array(5...22)
 

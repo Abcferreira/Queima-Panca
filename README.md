@@ -35,6 +35,11 @@
 - 💾 **Persistência local** — SwiftData para salvar progresso e treinos customizados
 - 🌙 **Dark mode** — Interface adaptativa light/dark
 - 🔔 **Notificações** — Lembretes de treino configuráveis
+- 📱 **Widget** — Treino do dia e progresso semanal na tela inicial
+- ❤️ **HealthKit** — Treinos salvos automaticamente no Apple Saúde
+- ⌚ **Apple Watch** — Companion app com treino, timer e tracking de séries
+- 📈 **Histórico com gráficos** — Swift Charts com evolução semanal e consistência
+- ☁️ **Backup iCloud** — Sincronização automática via CloudKit
 
 ---
 

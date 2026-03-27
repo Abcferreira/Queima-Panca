@@ -59,7 +59,7 @@ struct RestTimerView: View {
 
             // Dismiss button
             Button(action: {
-                timerVM.dismiss()
+                timerVM.stop()
                 dismiss()
             }) {
                 Label("Fechar", systemImage: "xmark.circle.fill")

@@ -16,6 +16,7 @@ final class WorkoutViewModel: ObservableObject {
     @Published var workouts: [DayWorkout] = []
     @Published var completedSets: [UUID: [Bool]] = [:]
     @Published var completedWorkouts: Set<UUID> = []
+    @Published var showRestTimer: Bool = false
 
     // MARK: - Sub ViewModels
     let restTimerVM = RestTimerViewModel()
@@ -48,6 +49,7 @@ final class WorkoutViewModel: ObservableObject {
         // Start rest timer when marking a set as completed
         if completedSets[exerciseID]?[index] == true {
             restTimerVM.start(duration: 60)
+            showRestTimer = true
         }
     }
 

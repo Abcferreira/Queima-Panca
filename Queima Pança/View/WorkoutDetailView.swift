@@ -42,10 +42,7 @@ struct WorkoutDetailView: View {
         .background(Color(.systemGroupedBackground))
         .navigationTitle(dayWorkout.day)
         .navigationBarTitleDisplayMode(.inline)
-        .sheet(isPresented: Binding(
-            get: { viewModel.restTimerVM.isPresented },
-            set: { viewModel.restTimerVM.isPresented = $0 }
-        )) {
+        .sheet(isPresented: $viewModel.showRestTimer) {
             RestTimerView(timerVM: viewModel.restTimerVM)
                 .presentationDetents([.height(480)])
                 .presentationDragIndicator(.visible)

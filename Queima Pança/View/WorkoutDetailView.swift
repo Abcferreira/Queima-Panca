@@ -47,7 +47,7 @@ struct WorkoutDetailView: View {
             set: { viewModel.restTimerVM.isPresented = $0 }
         )) {
             RestTimerView(timerVM: viewModel.restTimerVM)
-                .presentationDetents([.medium])
+                .presentationDetents([.height(480)])
                 .presentationDragIndicator(.visible)
         }
     }

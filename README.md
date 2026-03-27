@@ -158,23 +158,7 @@ open "Queima Pança.xcodeproj"
 - [ ] Dark mode otimizado
 
 ---
-
-## 👨‍💻 Autor
-
-<table>
-  <tr>
-    <td align="center">
-      <a href="https://github.com/Abcferreira">
-        <img src="https://github.com/Abcferreira.png" width="100px;" alt="Anderson Ferreira"/>
-        <br />
-        <sub><b>Anderson Borges Costa Ferreira</b></sub>
-      </a>
-    </td>
-  </tr>
-</table>
-
----
-
+o
 ## 📄 Licença
 
 Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.

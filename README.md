@@ -91,15 +91,9 @@ Queima Pança/
 ## 📸 Screenshots
 
 <p align="center">
-  <img src="screenshots/home.png" width="250" alt="Home"/>
-  &nbsp;&nbsp;
-  <img src="screenshots/detail.png" width="250" alt="Detalhe do Treino"/>
-  &nbsp;&nbsp;
-  <img src="screenshots/timer.png" width="250" alt="Timer de Descanso"/>
-</p>
-
-<p align="center">
-  <sub>Home · Detalhe do Treino · Timer de Descanso</sub>
+  <img src="https://github.com/user-attachments/assets/b3c6df7c-0f68-4e24-a892-2e9688487c81" width="250" alt="Home"/>
+  <img src="https://github.com/user-attachments/assets/a989717c-769c-4b28-b453-dfe5e3e34386" width="250" alt="Detalhe"/>
+  <img src="https://github.com/user-attachments/assets/ddf2b57c-5216-4314-9b7b-6515a31c4404" width="250" alt="Timer"/>
 </p>
 
 ---

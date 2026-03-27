@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import SwiftData
 
 // MARK: - Workout ViewModel
 
@@ -23,6 +24,7 @@ final class WorkoutViewModel: ObservableObject {
 
     // MARK: - Dependencies
     private let repository: WorkoutRepositoryProtocol
+    private var persistence: PersistenceService?
 
     // MARK: - Init
 
@@ -31,10 +33,25 @@ final class WorkoutViewModel: ObservableObject {
         loadWorkouts()
     }
 
+    /// Call this once the ModelContext is available (from the App)
+    func configure(with modelContext: ModelContext) {
+        self.persistence = PersistenceService(modelContext: modelContext)
+        loadProgress()
+    }
+
     // MARK: - Data Loading
 
     func loadWorkouts() {
         workouts = repository.fetchWorkouts()
+    }
+
+    /// Load persisted progress from SwiftData
+    private func loadProgress() {
+        guard let persistence else { return }
+
+        let allExercises = workouts.flatMap(\.exercises)
+        completedSets = persistence.loadCompletedSets(for: allExercises)
+        completedWorkouts = persistence.loadCompletedWorkouts()
     }
 
     // MARK: - Set Tracking
@@ -45,9 +62,13 @@ final class WorkoutViewModel: ObservableObject {
         }
 
         completedSets[exerciseID]?[index].toggle()
+        let isCompleted = completedSets[exerciseID]?[index] ?? false
+
+        // Persist
+        persistence?.toggleSet(exerciseID: exerciseID, setIndex: index, isCompleted: isCompleted)
 
         // Start rest timer when marking a set as completed
-        if completedSets[exerciseID]?[index] == true {
+        if isCompleted {
             restTimerVM.start(duration: 60)
             showRestTimer = true
         }
@@ -78,13 +99,24 @@ final class WorkoutViewModel: ObservableObject {
 
     func markWorkoutCompleted(_ workout: DayWorkout) {
         completedWorkouts.insert(workout.id)
+        persistence?.toggleWorkoutCompletion(workoutID: workout.id, isCompleted: true)
+
+        // Save to history
+        let completedSetsTotal = workout.exercises.reduce(0) { $0 + completedSetsCount(for: $1.id) }
+        persistence?.saveToHistory(
+            workoutID: workout.id,
+            workoutDay: workout.day,
+            totalSets: workout.totalSets,
+            completedSets: completedSetsTotal
+        )
     }
 
     func toggleWorkoutCompletion(_ workout: DayWorkout) {
         if completedWorkouts.contains(workout.id) {
             completedWorkouts.remove(workout.id)
+            persistence?.toggleWorkoutCompletion(workoutID: workout.id, isCompleted: false)
         } else {
-            completedWorkouts.insert(workout.id)
+            markWorkoutCompleted(workout)
         }
     }
 
@@ -105,5 +137,6 @@ final class WorkoutViewModel: ObservableObject {
     func resetProgress() {
         completedSets.removeAll()
         completedWorkouts.removeAll()
+        persistence?.resetAllProgress()
     }
 }

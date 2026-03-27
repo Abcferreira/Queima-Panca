@@ -8,7 +8,65 @@ struct ExerciseCard: View {
     let onToggleSet: (Int) -> Void
     let onVideoTap: () -> Void
 
+    private var isCompleted: Bool {
+        completedSetsCount >= exercise.setsCount
+    }
+
     var body: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            if isCompleted {
+                completedView
+            } else {
+                expandedView
+            }
+        }
+        .fitnessCard()
+        .animation(.easeInOut(duration: 0.35), value: isCompleted)
+    }
+
+    // MARK: - Completed (collapsed)
+
+    private var completedView: some View {
+        HStack(spacing: 12) {
+            Image(systemName: "checkmark.circle.fill")
+                .font(.title2)
+                .foregroundColor(.green)
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text(exercise.name)
+                    .font(.subheadline.bold())
+                    .strikethrough(true, color: .secondary.opacity(0.5))
+                    .foregroundColor(.secondary)
+
+                HStack(spacing: 6) {
+                    Text(exercise.setsDisplay)
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+
+                    Text("·")
+                        .foregroundColor(.secondary)
+
+                    Text(exercise.muscleGroup.rawValue)
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+            }
+
+            Spacer()
+
+            Text("Concluído")
+                .font(.caption2.bold())
+                .padding(.horizontal, 8)
+                .padding(.vertical, 4)
+                .background(Color.green.opacity(0.15))
+                .foregroundColor(.green)
+                .clipShape(Capsule())
+        }
+    }
+
+    // MARK: - Expanded (in progress)
+
+    private var expandedView: some View {
         VStack(alignment: .leading, spacing: 12) {
             // Video Thumbnail
             if let url = exercise.thumbnailURL {
@@ -83,16 +141,8 @@ struct ExerciseCard: View {
                     .font(.caption.bold())
                     .padding(.horizontal, 8)
                     .padding(.vertical, 4)
-                    .background(
-                        completedSetsCount >= exercise.setsCount
-                            ? Color.green.opacity(0.15)
-                            : AppTheme.secondary
-                    )
-                    .foregroundColor(
-                        completedSetsCount >= exercise.setsCount
-                            ? .green
-                            : AppTheme.primary
-                    )
+                    .background(AppTheme.secondary)
+                    .foregroundColor(AppTheme.primary)
                     .clipShape(Capsule())
             }
 
@@ -125,6 +175,5 @@ struct ExerciseCard: View {
             }
             .padding(.top, 4)
         }
-        .fitnessCard()
     }
 }

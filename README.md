@@ -147,8 +147,8 @@ open "Queima Pança.xcodeproj"
 - [x] Timer de descanso com Combine
 - [x] Progresso semanal visual
 - [x] Thumbnails de vídeos YouTube
-- [ ] Persistência local com SwiftData
-- [ ] Histórico de treinos
+- [x] Persistência local com SwiftData
+- [x] Histórico de treinos
 - [ ] Customização do plano de treino
 - [ ] Notificações de lembrete
 - [ ] Widget para a tela inicial

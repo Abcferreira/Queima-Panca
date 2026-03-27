@@ -156,7 +156,7 @@ open "Queima Pança.xcodeproj"
 - [ ] Dark mode otimizado
 
 ---
-o
+
 ## 📄 Licença
 
 Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.

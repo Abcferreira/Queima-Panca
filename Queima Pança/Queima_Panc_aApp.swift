@@ -23,7 +23,7 @@ struct Queima_Panc_aApp: App {
         let config = ModelConfiguration(
             schema: schema,
             isStoredInMemoryOnly: false,
-            cloudKitDatabase: .automatic
+            cloudKitDatabase: .none
         )
         do {
             return try ModelContainer(for: schema, configurations: [config])

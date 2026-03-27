@@ -1,7 +1,3 @@
-<p align="center">
-  <img src="https://img.icons8.com/color/96/fire-element--v1.png" alt="Queima Pança Logo"/>
-</p>
-
 <h1 align="center">🔥 Queima Pança</h1>
 
 <p align="center">

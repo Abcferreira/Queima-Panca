@@ -67,6 +67,28 @@ struct SettingsView: View {
                     Text("Progresso")
                 }
 
+                // MARK: - iCloud
+                Section {
+                    HStack {
+                        Label("Backup iCloud", systemImage: "icloud.fill")
+                        Spacer()
+                        Text("Ativo")
+                            .foregroundColor(.green)
+                            .font(.caption.bold())
+                    }
+
+                    HStack {
+                        Label("Sincronização", systemImage: "arrow.triangle.2.circlepath")
+                        Spacer()
+                        Text("Automática")
+                            .foregroundColor(.secondary)
+                    }
+                } header: {
+                    Text("iCloud")
+                } footer: {
+                    Text("Seus treinos e progresso são sincronizados automaticamente com o iCloud.")
+                }
+
                 // MARK: - About
                 Section {
                     HStack {
@@ -98,6 +120,8 @@ struct SettingsView: View {
             }
             .onAppear {
                 checkNotificationStatus()
+                healthKitEnabled = HealthKitService.shared.isAuthorized()
+                if healthKitEnabled { fetchHealthData() }
             }
         }
     }
@@ -126,6 +150,15 @@ struct SettingsView: View {
     private func checkNotificationStatus() {
         NotificationService.shared.checkPermissionStatus { authorized in
             notificationsEnabled = authorized
+        }
+    }
+
+    private func fetchHealthData() {
+        HealthKitService.shared.fetchTodaySteps { steps in
+            todaySteps = steps
+        }
+        HealthKitService.shared.fetchTodayCalories { cals in
+            todayCalories = cals
         }
     }
 }

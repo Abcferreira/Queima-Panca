@@ -20,8 +20,13 @@ struct Queima_Panc_aApp: App {
             CustomWorkout.self,
             CustomExercise.self
         ])
+        let config = ModelConfiguration(
+            schema: schema,
+            isStoredInMemoryOnly: false,
+            cloudKitDatabase: .automatic
+        )
         do {
-            return try ModelContainer(for: schema)
+            return try ModelContainer(for: schema, configurations: [config])
         } catch {
             fatalError("Could not create ModelContainer: \(error)")
         }
@@ -40,6 +45,11 @@ struct Queima_Panc_aApp: App {
                         Label("Meus Treinos", systemImage: "square.and.pencil")
                     }
 
+                HistoryView()
+                    .tabItem {
+                        Label("Histórico", systemImage: "chart.line.uptrend.xyaxis")
+                    }
+
                 SettingsView()
                     .tabItem {
                         Label("Ajustes", systemImage: "gearshape")
@@ -51,6 +61,7 @@ struct Queima_Panc_aApp: App {
             .onAppear {
                 let context = ModelContext(modelContainer)
                 viewModel.configure(with: context)
+                WatchConnectivityService.shared.activate()
             }
         }
     }

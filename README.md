@@ -94,6 +94,11 @@ Queima Pança/
 | **SF Symbols** | Ícones nativos Apple |
 | **AsyncImage** | Carregamento de thumbnails do YouTube |
 | **ShareLink** | Compartilhamento nativo nas redes sociais |
+| **WidgetKit** | Widget para tela inicial (small/medium) |
+| **HealthKit** | Integração com Apple Saúde |
+| **WatchConnectivity** | Comunicação iPhone ↔ Apple Watch |
+| **Swift Charts** | Gráficos de evolução e histórico |
+| **CloudKit** | Backup e sincronização iCloud |
 
 ---
 
@@ -159,11 +164,15 @@ open "Queima Pança.xcodeproj"
 - [x] Compartilhar treino nas redes sociais
 - [x] Notificações de lembrete
 - [x] Dark mode otimizado
-- [ ] Widget para a tela inicial
-- [ ] Integração com HealthKit
-- [ ] Apple Watch companion
-- [ ] Histórico com gráficos de evolução
-- [ ] Backup iCloud
+- [x] Widget para a tela inicial
+- [x] Integração com HealthKit
+- [x] Apple Watch companion
+- [x] Histórico com gráficos de evolução
+- [x] Backup iCloud
+- [ ] Streaks e gamificação
+- [ ] Modo offline completo
+- [ ] Exportar PDF do plano
+- [ ] Integração com Strava
 
 ---
 

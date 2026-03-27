@@ -49,6 +49,7 @@ final class WorkoutViewModel: ObservableObject {
         self.persistence = PersistenceService(modelContext: modelContext)
         loadProgress()
         loadCustomWorkouts()
+        updateWidgetData()
     }
 
     // MARK: - Data Loading
@@ -92,6 +93,8 @@ final class WorkoutViewModel: ObservableObject {
             restTimerVM.start(duration: 60)
             showRestTimer = true
         }
+
+        updateWidgetData()
     }
 
     func isSetCompleted(for exerciseID: UUID, index: Int) -> Bool {
@@ -130,11 +133,32 @@ final class WorkoutViewModel: ObservableObject {
             completedSets: completedSetsTotal
         )
 
+        // Save to HealthKit
+        saveToHealthKit(workout: workout)
+
         // Trigger achievement modal
         lastCompletedWorkout = workout
         showAchievement = true
+        updateWidgetData()
     }
 
+    /// Save workout to Apple Health
+    private func saveToHealthKit(workout: DayWorkout) {
+        guard HealthKitService.shared.isAuthorized() else { return }
+
+        let duration = TimeInterval(workout.estimatedMinutes * 60)
+        let calories = HealthKitService.estimateCalories(durationMinutes: workout.estimatedMinutes)
+
+        HealthKitService.shared.saveWorkout(
+            name: "\(workout.day) — \(workout.subtitle)",
+            duration: duration,
+            caloriesBurned: calories
+        ) { success in
+            if success {
+                print("✅ Treino salvo no Apple Saúde")
+            }
+        }
+    }
     func toggleWorkoutCompletion(_ workout: DayWorkout) {
         if completedWorkouts.contains(workout.id) {
             completedWorkouts.remove(workout.id)

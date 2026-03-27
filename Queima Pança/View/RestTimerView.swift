@@ -4,10 +4,10 @@ import SwiftUI
 
 struct RestTimerView: View {
     @ObservedObject var timerVM: RestTimerViewModel
+    @Environment(\.dismiss) private var dismiss
 
     var body: some View {
-        VStack(spacing: 24) {
-            Spacer()
+        VStack(spacing: 20) {
 
             // Title
             HStack(spacing: 8) {
@@ -23,7 +23,7 @@ struct RestTimerView: View {
                 // Background circle
                 Circle()
                     .stroke(Color.gray.opacity(0.2), lineWidth: 12)
-                    .frame(width: 200, height: 200)
+                    .frame(width: 180, height: 180)
 
                 // Progress circle
                 Circle()
@@ -32,14 +32,14 @@ struct RestTimerView: View {
                         timerGradient,
                         style: StrokeStyle(lineWidth: 12, lineCap: .round)
                     )
-                    .frame(width: 200, height: 200)
+                    .frame(width: 180, height: 180)
                     .rotationEffect(.degrees(-90))
                     .animation(.linear(duration: 1), value: timerVM.progress)
 
                 // Time text
                 VStack(spacing: 4) {
                     Text(timerVM.timeFormatted)
-                        .font(.system(size: 48, weight: .bold, design: .monospaced))
+                        .font(.system(size: 44, weight: .bold, design: .monospaced))
                         .foregroundColor(.primary)
 
                     Text(timerVM.isRunning ? "descansando..." : "finalizado!")
@@ -47,7 +47,6 @@ struct RestTimerView: View {
                         .foregroundColor(.secondary)
                 }
             }
-            .padding(.vertical, 16)
 
             // Quick-add buttons
             HStack(spacing: 16) {
@@ -59,7 +58,10 @@ struct RestTimerView: View {
             Spacer()
 
             // Dismiss button
-            Button(action: { timerVM.dismiss() }) {
+            Button(action: {
+                timerVM.dismiss()
+                dismiss()
+            }) {
                 Label("Fechar", systemImage: "xmark.circle.fill")
                     .font(.headline)
                     .frame(maxWidth: .infinity)
@@ -69,8 +71,9 @@ struct RestTimerView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 14))
             }
             .padding(.horizontal, 32)
-            .padding(.bottom, 24)
+            .padding(.bottom, 16)
         }
+        .padding(.top, 24)
         .background(Color(.systemBackground))
     }
 

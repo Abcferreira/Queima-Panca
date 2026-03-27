@@ -74,7 +74,7 @@ struct RestTimerView: View {
             .padding(.bottom, 16)
         }
         .padding(.top, 24)
-        .background(Color(.systemBackground))
+        .background(AppTheme.background.ignoresSafeArea())
     }
 
     // MARK: - Subviews

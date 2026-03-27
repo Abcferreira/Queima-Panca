@@ -28,6 +28,13 @@
 - 🏃 **Seção de cardio** — Recomendações de cardio para cada dia
 - 🌤️ **Saudação dinâmica** — Bom dia / Boa tarde / Boa noite automático
 - 📳 **Feedback háptico** — Vibração ao completar o tempo de descanso
+- 🏋️ **Treinos customizados** — Crie seus próprios treinos com exercícios do catálogo
+- 📚 **Catálogo de exercícios** — 60+ exercícios organizados por grupo muscular
+- 🎉 **Animação de conquista** — Confetti + modal com equivalência de peso (carro, sumô, etc)
+- 📤 **Compartilhar treino** — Compartilhe seus resultados nas redes sociais
+- 💾 **Persistência local** — SwiftData para salvar progresso e treinos customizados
+- 🌙 **Dark mode** — Interface adaptativa light/dark
+- 🔔 **Notificações** — Lembretes de treino configuráveis
 
 ---
 
@@ -80,11 +87,13 @@ Queima Pança/
 |-----------|-----|
 | **Swift 5.9+** | Linguagem principal |
 | **SwiftUI** | Framework de UI declarativa |
+| **SwiftData** | Persistência local (progresso, treinos customizados) |
 | **Combine** | Timer reativo e bindings |
 | **MVVM** | Arquitetura de separação de responsabilidades |
 | **Repository Pattern** | Abstração da camada de dados |
 | **SF Symbols** | Ícones nativos Apple |
 | **AsyncImage** | Carregamento de thumbnails do YouTube |
+| **ShareLink** | Compartilhamento nativo nas redes sociais |
 
 ---
 
@@ -143,11 +152,18 @@ open "Queima Pança.xcodeproj"
 - [x] Thumbnails de vídeos YouTube
 - [x] Persistência local com SwiftData
 - [x] Histórico de treinos
-- [ ] Customização do plano de treino
-- [ ] Notificações de lembrete
+- [x] Customização do plano de treino
+- [x] Catálogo de exercícios (60+)
+- [x] Animação de conclusão (confetti)
+- [x] Modal de conquista com equivalência de peso
+- [x] Compartilhar treino nas redes sociais
+- [x] Notificações de lembrete
+- [x] Dark mode otimizado
 - [ ] Widget para a tela inicial
 - [ ] Integração com HealthKit
-- [ ] Dark mode otimizado
+- [ ] Apple Watch companion
+- [ ] Histórico com gráficos de evolução
+- [ ] Backup iCloud
 
 ---
 

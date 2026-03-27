@@ -29,7 +29,7 @@ struct ContentView: View {
                 .padding(.horizontal)
                 .padding(.bottom, 32)
             }
-            .background(Color(.systemGroupedBackground))
+            .background(AppTheme.background.ignoresSafeArea())
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .principal) {
@@ -99,6 +99,27 @@ struct ContentView: View {
                 .padding(.leading, 4)
 
             ForEach(viewModel.workouts) { workout in
+                NavigationLink(destination: WorkoutDetailView(dayWorkout: workout)) {
+                    WorkoutCard(
+                        workout: workout,
+                        progress: viewModel.workoutProgress(for: workout),
+                        isCompleted: viewModel.isWorkoutCompleted(workout)
+                    )
+                }
+                .buttonStyle(.plain)
+            }
+        }
+    }
+
+    // MARK: - Custom Workouts Section
+
+    private var customWorkoutsSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Treinos Customizados")
+                .font(.title3.bold())
+                .padding(.leading, 4)
+
+            ForEach(viewModel.customWorkouts) { workout in
                 NavigationLink(destination: WorkoutDetailView(dayWorkout: workout)) {
                     WorkoutCard(
                         workout: workout,

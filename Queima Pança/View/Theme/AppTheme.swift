@@ -4,12 +4,20 @@ import SwiftUI
 
 enum AppTheme {
 
-    // MARK: - Colors
+    // MARK: - Colors (adaptive light/dark)
     static let primary = Color.orange
     static let secondary = Color.orange.opacity(0.15)
     static let accent = Color.red
-    static let cardBackground = Color.gray.opacity(0.1)
-    static let background = Color.white
+
+    /// Adaptive card background — light gray in light mode, darker in dark mode
+    static var cardBackground: Color {
+        Color(light: Color(.systemBackground), dark: Color(.secondarySystemBackground))
+    }
+
+    /// Adaptive main background
+    static var background: Color {
+        Color(light: Color(.systemGroupedBackground), dark: Color(.systemBackground))
+    }
 
     // MARK: - Gradients
     static let primaryGradient = LinearGradient(
@@ -23,19 +31,44 @@ enum AppTheme {
     static let smallCornerRadius: CGFloat = 10
 
     // MARK: - Shadows
-    static let cardShadow: Color = Color.black.opacity(0.08)
     static let cardShadowRadius: CGFloat = 8
+
+    static var cardShadow: Color {
+        Color(light: Color.black.opacity(0.08), dark: Color.black.opacity(0.3))
+    }
+}
+
+// MARK: - Adaptive Color Helper
+
+extension Color {
+    init(light: Color, dark: Color) {
+        self.init(uiColor: UIColor { traits in
+            traits.userInterfaceStyle == .dark
+                ? UIColor(dark)
+                : UIColor(light)
+        })
+    }
 }
 
 // MARK: - View Modifiers
 
 struct FitnessCardModifier: ViewModifier {
+    @Environment(\.colorScheme) var colorScheme
+
     func body(content: Content) -> some View {
         content
             .padding(16)
             .background(AppTheme.cardBackground)
             .clipShape(RoundedRectangle(cornerRadius: AppTheme.cornerRadius))
-            .shadow(color: AppTheme.cardShadow, radius: AppTheme.cardShadowRadius, y: 4)
+            .shadow(
+                color: colorScheme == .dark ? .clear : AppTheme.cardShadow,
+                radius: AppTheme.cardShadowRadius,
+                y: 4
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: AppTheme.cornerRadius)
+                    .stroke(colorScheme == .dark ? Color.white.opacity(0.08) : .clear, lineWidth: 1)
+            )
     }
 }
 

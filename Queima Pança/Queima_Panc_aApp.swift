@@ -14,18 +14,43 @@ struct Queima_Panc_aApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
-                .environmentObject(viewModel)
-                .onAppear {
-                    if let container = try? ModelContainer(
-                        for: ExerciseProgress.self,
-                        WorkoutProgress.self,
-                        WorkoutHistory.self
-                    ) {
-                        let context = ModelContext(container)
-                        viewModel.configure(with: context)
+            TabView {
+                ContentView()
+                    .tabItem {
+                        Label("Treinos", systemImage: "dumbbell")
                     }
+
+                CustomWorkoutsView()
+                    .tabItem {
+                        Label("Meus Treinos", systemImage: "square.and.pencil")
+                    }
+
+                SettingsView()
+                    .tabItem {
+                        Label("Ajustes", systemImage: "gearshape")
+                    }
+            }
+            .tint(AppTheme.primary)
+            .environmentObject(viewModel)
+            .modelContainer(for: [
+                ExerciseProgress.self,
+                WorkoutProgress.self,
+                WorkoutHistory.self,
+                CustomWorkout.self,
+                CustomExercise.self
+            ])
+            .onAppear {
+                if let container = try? ModelContainer(
+                    for: ExerciseProgress.self,
+                    WorkoutProgress.self,
+                    WorkoutHistory.self,
+                    CustomWorkout.self,
+                    CustomExercise.self
+                ) {
+                    let context = ModelContext(container)
+                    viewModel.configure(with: context)
                 }
+            }
         }
     }
 }

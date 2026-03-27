@@ -39,13 +39,23 @@ struct WorkoutDetailView: View {
             .padding(.horizontal)
             .padding(.bottom, 32)
         }
-        .background(Color(.systemGroupedBackground))
+        .background(AppTheme.background.ignoresSafeArea())
         .navigationTitle(dayWorkout.day)
         .navigationBarTitleDisplayMode(.inline)
         .sheet(isPresented: $viewModel.showRestTimer) {
             RestTimerView(timerVM: viewModel.restTimerVM)
                 .presentationDetents([.height(480)])
                 .presentationDragIndicator(.visible)
+        }
+        .fullScreenCover(isPresented: $viewModel.showAchievement) {
+            if let workout = viewModel.lastCompletedWorkout {
+                WorkoutAchievementView(
+                    workout: workout,
+                    totalWeight: viewModel.totalWeightLifted(for: workout),
+                    completedSets: workout.exercises.reduce(0) { $0 + viewModel.completedSetsCount(for: $1.id) },
+                    totalSets: workout.totalSets
+                )
+            }
         }
     }
 

@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 import SwiftData
+import WidgetKit
 
 // MARK: - Workout ViewModel
 
@@ -15,16 +16,25 @@ final class WorkoutViewModel: ObservableObject {
 
     // MARK: - Published State
     @Published var workouts: [DayWorkout] = []
+    @Published var customWorkouts: [DayWorkout] = []
     @Published var completedSets: [UUID: [Bool]] = [:]
     @Published var completedWorkouts: Set<UUID> = []
     @Published var showRestTimer: Bool = false
+    @Published var showAchievement: Bool = false
+    @Published var lastCompletedWorkout: DayWorkout?
+
+    /// All workouts (default + custom)
+    var allWorkouts: [DayWorkout] {
+        workouts + customWorkouts
+    }
 
     // MARK: - Sub ViewModels
     let restTimerVM = RestTimerViewModel()
 
     // MARK: - Dependencies
     private let repository: WorkoutRepositoryProtocol
-    private var persistence: PersistenceService?
+    private(set) var persistence: PersistenceService?
+    private(set) var modelContext: ModelContext?
 
     // MARK: - Init
 
@@ -35,8 +45,10 @@ final class WorkoutViewModel: ObservableObject {
 
     /// Call this once the ModelContext is available (from the App)
     func configure(with modelContext: ModelContext) {
+        self.modelContext = modelContext
         self.persistence = PersistenceService(modelContext: modelContext)
         loadProgress()
+        loadCustomWorkouts()
     }
 
     // MARK: - Data Loading
@@ -45,11 +57,19 @@ final class WorkoutViewModel: ObservableObject {
         workouts = repository.fetchWorkouts()
     }
 
+    /// Load custom workouts from SwiftData
+    func loadCustomWorkouts() {
+        guard let modelContext else { return }
+        let descriptor = FetchDescriptor<CustomWorkout>(sortBy: [SortDescriptor(\.createdAt)])
+        guard let customs = try? modelContext.fetch(descriptor) else { return }
+        customWorkouts = customs.map { $0.toDayWorkout() }
+    }
+
     /// Load persisted progress from SwiftData
     private func loadProgress() {
         guard let persistence else { return }
 
-        let allExercises = workouts.flatMap(\.exercises)
+        let allExercises = allWorkouts.flatMap(\.exercises)
         completedSets = persistence.loadCompletedSets(for: allExercises)
         completedWorkouts = persistence.loadCompletedWorkouts()
     }
@@ -109,15 +129,40 @@ final class WorkoutViewModel: ObservableObject {
             totalSets: workout.totalSets,
             completedSets: completedSetsTotal
         )
+
+        // Trigger achievement modal
+        lastCompletedWorkout = workout
+        showAchievement = true
     }
 
     func toggleWorkoutCompletion(_ workout: DayWorkout) {
         if completedWorkouts.contains(workout.id) {
             completedWorkouts.remove(workout.id)
             persistence?.toggleWorkoutCompletion(workoutID: workout.id, isCompleted: false)
+            showAchievement = false
         } else {
             markWorkoutCompleted(workout)
         }
+    }
+
+    // MARK: - Weight Calculation
+
+    /// Calculate total weight lifted for a workout based on sets completed × weight in notes
+    func totalWeightLifted(for workout: DayWorkout) -> Double {
+        workout.exercises.reduce(0.0) { total, exercise in
+            let setsCompleted = completedSetsCount(for: exercise.id)
+            let reps = Int(exercise.repsOrDuration.filter(\.isNumber)) ?? 0
+            let weight = parseWeight(from: exercise.notes)
+            return total + (Double(setsCompleted) * Double(reps) * weight)
+        }
+    }
+
+    /// Parse weight from notes like "20.0kg" or "15kg"
+    private func parseWeight(from notes: String) -> Double {
+        let cleaned = notes
+            .replacingOccurrences(of: "kg", with: "")
+            .replacingOccurrences(of: " ", with: "")
+        return Double(cleaned) ?? 0
     }
 
     // MARK: - Overall Stats

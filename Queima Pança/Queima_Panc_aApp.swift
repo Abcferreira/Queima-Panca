@@ -12,6 +12,21 @@ import SwiftData
 struct Queima_Panc_aApp: App {
     @StateObject private var viewModel = WorkoutViewModel()
 
+    let modelContainer: ModelContainer = {
+        let schema = Schema([
+            ExerciseProgress.self,
+            WorkoutProgress.self,
+            WorkoutHistory.self,
+            CustomWorkout.self,
+            CustomExercise.self
+        ])
+        do {
+            return try ModelContainer(for: schema)
+        } catch {
+            fatalError("Could not create ModelContainer: \(error)")
+        }
+    }()
+
     var body: some Scene {
         WindowGroup {
             TabView {
@@ -32,24 +47,10 @@ struct Queima_Panc_aApp: App {
             }
             .tint(AppTheme.primary)
             .environmentObject(viewModel)
-            .modelContainer(for: [
-                ExerciseProgress.self,
-                WorkoutProgress.self,
-                WorkoutHistory.self,
-                CustomWorkout.self,
-                CustomExercise.self
-            ])
+            .modelContainer(modelContainer)
             .onAppear {
-                if let container = try? ModelContainer(
-                    for: ExerciseProgress.self,
-                    WorkoutProgress.self,
-                    WorkoutHistory.self,
-                    CustomWorkout.self,
-                    CustomExercise.self
-                ) {
-                    let context = ModelContext(container)
-                    viewModel.configure(with: context)
-                }
+                let context = ModelContext(modelContainer)
+                viewModel.configure(with: context)
             }
         }
     }
